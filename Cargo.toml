@@ -1,12 +1,27 @@
 [package]
 name = "udp-fanout"
 version = "0.1.0"
+authors = ["Henry Muru Paenga <meringu@gmail.com>"]
 edition = "2021"
+description = "Mirrors UDP packets to multiple targets"
+readme = "README.md"
+homepage = "https://github.com/meringu/udp-mirror"
+license = "MIT OR Apache-2.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[package.metadata.deb]
+systemd-units = { enable = false }
+maintainer-scripts = "pkg/debian/"
+assets = [
+    ["target/release/udp-fanout", "/usr/bin/udp-fanout", "0755"],
+    ["pkg/config.toml", "/etc/udp-fanout/config.toml", "0644"],
+    ["README.md", "/usr/share/doc/udp-fanout/README.md", "0644"],
+]
 
 [dependencies]
 
+serde = "1"
+serde_derive = "1"
 structopt = "0.3"
+toml = "0.5"
 tracing = "0.1"
 tracing-subscriber = "0.2"

@@ -1,23 +1,36 @@
+use serde_derive::Deserialize;
 use std::{
+    fs::read_to_string,
     io::Result,
     net::{SocketAddr, UdpSocket},
+    process::exit,
 };
 use structopt::StructOpt;
 use tracing::{error, info, trace, Level};
 
 #[derive(StructOpt, Debug)]
 struct Opt {
-    #[structopt(short, long, default_value = "0.0.0.0:8125")]
-    bind_address: SocketAddr,
-
-    #[structopt(short = "t", long)]
-    fanout_targets: Vec<SocketAddr>,
+    #[structopt(short, long)]
+    config: String,
 
     #[structopt(short, long, default_value = "info")]
     log_level: Level,
 }
 
-fn main() -> Result<()> {
+#[derive(Deserialize)]
+struct Config {
+    bind_address: SocketAddr,
+    targets: Vec<SocketAddr>,
+}
+
+fn main() {
+    if let Err(e) = run() {
+        error!("{}", e);
+        exit(1)
+    }
+}
+
+fn run() -> Result<()> {
     // Parse command line args
     let opt = Opt::from_args();
 
@@ -26,12 +39,14 @@ fn main() -> Result<()> {
         .with_max_level(opt.log_level)
         .init();
 
+    let config: Config = toml::from_str(&read_to_string(opt.config)?)?;
+
     // Bind to address
-    info!("binding to {}", opt.bind_address);
-    let socket = UdpSocket::bind(&opt.bind_address)?;
+    info!("binding to {}", config.bind_address);
+    let socket = UdpSocket::bind(&config.bind_address)?;
 
     let mut target_sockets = vec![];
-    for addr in opt.fanout_targets {
+    for addr in config.targets {
         let target_socket = UdpSocket::bind("0.0.0.0:0")?;
         trace!(
             "connecting from {} to {}",

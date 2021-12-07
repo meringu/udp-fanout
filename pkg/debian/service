@@ -1,0 +1,8 @@
+[Unit]
+Description=Mirrors UDP packets to multiple targets.
+
+[Service]
+ExecStart=/usr/bin/udp-fanout -c /etc/udp-fanout/config.toml
+
+[Install]
+WantedBy=multi-user.target

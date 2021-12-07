@@ -6,19 +6,20 @@ This can be useful for sending [StatsD](https://github.com/statsd/statsd) metric
 
 ## Usage
 
-See `udp-fanout --help` for usage.
+For a give `config.toml` file:
 
-For example: `udp-fanout -b 0.0.0.0:8125 -t 127.0.0.1:8126 -t 127.0.0.1:8127`, will bind to port `8125`, and mirror any UDP packets recieved to ports `8126` and `8127`.
+```toml
+bind_address = "0.0.0.0:8125"
+targets = [
+    "127.0.0.1:8126",
+    "127.0.0.1:8127",
+]
+```
 
-## Building
+Run:
 
-- Install rust https://rustup.rs/
+```
+udp-fanout -c config.toml
+```
 
-Compile:
-
-    cargo build --release
-
-You may wish to cross compile, e.g. compiling for Windows from a Linux host:
-
-    rustup target add x86_64-pc-windows-gnu
-    cargo build --target x86_64-pc-windows-gnu --release
+This will `udp-fanout` bind to port `8125`, and mirror any UDP packets recieved to ports `8126` and `8127`.
