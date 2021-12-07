@@ -6,7 +6,7 @@ use std::{
     process::exit,
 };
 use structopt::StructOpt;
-use tracing::{error, info, trace, Level};
+use tracing::{error, info, trace, warn, Level};
 
 #[derive(StructOpt, Debug)]
 struct Opt {
@@ -74,7 +74,7 @@ fn run() -> Result<()> {
         // Send payload
         for target_socket in target_sockets.iter() {
             if let Err(e) = target_socket.send(payload) {
-                error!("failed to send message: {}", e);
+                warn!("failed to send message: {}", e);
             }
         }
     }
