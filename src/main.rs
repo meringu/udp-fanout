@@ -42,11 +42,11 @@ fn main() -> Result<()> {
         target_sockets.push(target_socket);
     }
 
-    // The buffer is the largest size of a single UDP packet
+    // This buffer is the largest size of a single UDP packet
     let mut buf = [0; 1024];
 
     loop {
-        // wait for a message
+        // Wait for a message
         let (len, _) = match socket.recv_from(&mut buf) {
             Ok(x) => x,
             Err(e) => {
@@ -58,9 +58,8 @@ fn main() -> Result<()> {
 
         // Send payload
         for target_socket in target_sockets.iter() {
-            match target_socket.send(payload) {
-                Err(e) => error!("failed to send message: {}", e),
-                _ => {}
+            if let Err(e) = target_socket.send(payload) {
+                error!("failed to send message: {}", e);
             }
         }
     }
