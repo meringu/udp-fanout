@@ -6,7 +6,7 @@ This can be useful for sending [StatsD](https://github.com/statsd/statsd) metric
 
 ## Usage
 
-For a give `config.toml` file:
+For a given `config.toml` file:
 
 ```toml
 bind_address = "0.0.0.0:8125"
