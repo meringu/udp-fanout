@@ -22,4 +22,4 @@ Run:
 udp-fanout -c config.toml
 ```
 
-This will `udp-fanout` bind to port `8125`, and mirror any UDP packets recieved to ports `8126` and `8127`.
+This will bind `udp-fanout` to port `8125`, and mirror any UDP packets recieved to ports `8126` and `8127`.
